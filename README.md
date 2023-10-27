@@ -2,7 +2,7 @@
 
 Been trying to find a full solution that works for checking if a IP address is part of a Cloud Service Provider.
 
-This stands up a simple web page to submit a IP address to and optionally update all the lists below.
+This stands up a simple web page to submit a IP address and optionally update all the lists below.
 
 #### Services so far:
 * AWS
