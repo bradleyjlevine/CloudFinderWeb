@@ -589,17 +589,15 @@ def update():
         with open(os.path.join(CWD,"clouds","zscaler-hubs.json"), "w") as file:
             json.dump(clouds["zscaler-hubs"], file)
 
+CWD = os.getcwd()
+cache = [f for f in os.listdir(os.path.join(CWD,"clouds")) if os.path.isfile(os.path.join(CWD,"clouds",f)) ]
+
+for file in cache:
+    cloud, ext = file.split(".")
+
+    with open(os.path.join(CWD,"clouds",file), "r") as file:
+        if ext == "json":
+            clouds.update(defaultdict(None, {cloud: json.load(file)}))
 
 if __name__ == "__main__":
-    CWD = os.getcwd()
-    cache = [f for f in os.listdir(os.path.join(CWD,"clouds")) if os.path.isfile(os.path.join(CWD,"clouds",f)) ]
-    
-    for file in cache:
-        cloud, ext = file.split(".")
-
-        with open(os.path.join(CWD,"clouds",file), "r") as file:
-            if ext == "json":
-                clouds.update(defaultdict(None, {cloud: json.load(file)}))
-
-    app.run(port=5050)
-    
+    app.run(debug=False, host="127.0.0.1", port=5050)

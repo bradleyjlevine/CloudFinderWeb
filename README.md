@@ -20,7 +20,13 @@ This stands up a simple web page to submit a IP address and optionally update al
 * Zscaler
 
 #### Start Flask
-<code>python .\cloud_finder.py</code>
+><code>python .\cloud_finder.py</code>
+
+#### Start Gunicorn (Only works on Unix or WSL2)
+><code>gunicorn -b 127.0.0.1:5050 -w 4 "cloud_finder:app"</code>
+ 
+Note: You will need to install gunicorn with
+> <code>pip install gunicorn</code>
 
 <a href="http://localhost:5050">Go Locally Hosted Page!</a>
 
