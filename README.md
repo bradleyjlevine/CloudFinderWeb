@@ -19,6 +19,11 @@ This stands up a simple web page to submit a IP address and optionally update al
 * IBM Cloud
 * Zscaler
 
+#### Start Flask
+<code>python .\cloud_finder.py</code>
+
+<a href="http://localhost:5050">Go Locally Hosted Page!</a>
+
 #### Example
 Submit IP address to check:
 
