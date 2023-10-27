@@ -7,6 +7,7 @@ import json
 import os
 import ipaddress
 import requests
+import re
 
 app = Flask(__name__)
 clouds = defaultdict()
@@ -23,7 +24,10 @@ def submission():
         if "updatelists" in result.keys() and result["updatelists"] == "yes":
             update()
         
-        return lookup_ip(result["ip"])
+        if "ip" in result.keys() and len(result["ip"])>0 and check_is_ip(result["ip"]):
+            return lookup_ip(result["ip"])
+        else:
+            return {}
 
 def lookup_ip(ip):
     results = defaultdict()
@@ -36,6 +40,14 @@ def lookup_ip(ip):
                 results[cloud]={ip:clouds[cloud][subnet]}
     
     return results
+
+def check_is_ip(ip):
+    if re.match(r"^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$", ip):
+        return True
+    elif re.match(r"^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$", ip):
+        return True
+    else:
+        return False
 
 def get_gcp():
     urls = {"google": "https://www.gstatic.com/ipranges/goog.json", 
