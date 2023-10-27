@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, make_response
 from collections import defaultdict
 from zipfile import ZipFile
 from bs4 import BeautifulSoup
@@ -25,9 +25,13 @@ def submission():
             update()
         
         if "ip" in result.keys() and len(result["ip"])>0 and check_is_ip(result["ip"]):
-            return lookup_ip(result["ip"])
+            response = make_response(lookup_ip(result["ip"]))
+            response.headers["content-type"] = "application/json"
+            return response
         else:
-            return {}
+            response = make_response({})
+            response.headers["content-type"] = "application/json"
+            return response
 
 def lookup_ip(ip):
     results = defaultdict()
