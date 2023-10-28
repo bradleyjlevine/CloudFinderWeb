@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, make_response
+from flask import Flask, render_template, request, make_response, url_for
 from collections import defaultdict
 from zipfile import ZipFile
 from bs4 import BeautifulSoup
@@ -32,6 +32,34 @@ def submission():
             response = make_response({})
             response.headers["content-type"] = "application/json"
             return response
+        
+@app.route("/favicon", methods=["GET"])
+def favicon():
+    return url_for("static", filename="favicon.ico")
+
+@app.route("/site.webmanifest", methods=["GET"])
+def site_webmainfest():
+    return url_for("static", filename="site.webmanifest")
+
+@app.route("/apple-touch-icon.png", methods=["GET"])
+def apple_icon():
+    return url_for("static", filename="apple-touch-icon.png")
+
+@app.route("/android-chrome-192x192.png", methods=["GET"])
+def chrome_icon():
+    return url_for("static", filename="android-chrome-192x192.png")
+
+@app.route("/android-chrome-512x512.png", methods=["GET"])
+def chrome_icon1():
+    return url_for("static", filename="android-chrome-512x512.png")
+
+@app.route("/favicon-16x16.png", methods=["GET"])
+def favicon_png():
+    return url_for("static", filename="favicon-16x16.png")
+
+@app.route("/favicon-32x32.png", methods=["GET"])
+def favicon_png1():
+    return url_for("static", filename="favicon-32x32.png")
 
 def lookup_ip(ip):
     results = defaultdict()
