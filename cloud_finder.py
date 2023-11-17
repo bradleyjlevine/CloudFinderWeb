@@ -74,9 +74,9 @@ def lookup_ip(ip):
     return results
 
 def check_is_ip(ip):
-    if re.match(r"^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$", ip):
+    if re.match(r"^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}", ip):
         return True
-    elif re.match(r"^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$", ip):
+    elif re.match(r"^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))", ip):
         return True
     else:
         return False
@@ -99,37 +99,41 @@ def get_gcp():
 
                 for ip in j["prefixes"]:
                     if "ipv4Prefix" in ip.keys():
-                        clouds[url].update({ip["ipv4Prefix"]:{
-                                         "description": "IP Address Owned by Google",
-                                         "region": None,
-                                         "service": None,
-                                         "type": 4}
-                                    })
+                        if check_is_ip(ip["ipv4Prefix"]):
+                            clouds[url].update({ip["ipv4Prefix"]:{
+                                            "description": "IP Address Owned by Google",
+                                            "region": None,
+                                            "service": None,
+                                            "type": 4}
+                                        })
                     elif "ipv6Prefix" in ip.keys():
-                        clouds[url].update({ip["ipv6Prefix"]:{
-                                         "description": "IP Address Owned by Google",
-                                         "region": None,
-                                         "service": None,
-                                         "type": 6}
-                                    })
+                        if check_is_ip(ip["ipv6Prefix"]):
+                            clouds[url].update({ip["ipv6Prefix"]:{
+                                            "description": "IP Address Owned by Google",
+                                            "region": None,
+                                            "service": None,
+                                            "type": 6}
+                                        })
             elif url == "gcp":
                 clouds.update({url:defaultdict()})
 
                 for ip in j["prefixes"]:
                     if "ipv4Prefix" in ip.keys():
-                        clouds[url].update({ip["ipv4Prefix"]:{
-                                         "description": "IP Address Used by GCP",
-                                         "region": ip["scope"],
-                                         "service": ip["service"],
-                                         "type": 4}
-                                    })
+                        if check_is_ip(ip["ipv4Prefix"]):
+                            clouds[url].update({ip["ipv4Prefix"]:{
+                                            "description": "IP Address Used by GCP",
+                                            "region": ip["scope"],
+                                            "service": ip["service"],
+                                            "type": 4}
+                                        })
                     elif "ipv6Prefix" in ip.keys():
-                        clouds[url].update({ip["ipv6Prefix"]:{
-                                         "description": "IP Address Used by GCP",
-                                         "region": ip["scope"],
-                                         "service": ip["service"],
-                                         "type": 6}
-                                    })
+                        if check_is_ip(ip["ipv6Prefix"]):
+                            clouds[url].update({ip["ipv6Prefix"]:{
+                                            "description": "IP Address Used by GCP",
+                                            "region": ip["scope"],
+                                            "service": ip["service"],
+                                            "type": 6}
+                                        })
                         
 def get_aws():
     urls = {"aws": "https://ip-ranges.amazonaws.com/ip-ranges.json"}
@@ -148,12 +152,13 @@ def get_aws():
 
                 for ip in j["prefixes"]:
                     if "ip_prefix" in ip.keys():
-                        clouds[url].update({ip["ip_prefix"]:{
-                                         "description": "IP Address Used by AWS",
-                                         "region": ip["region"],
-                                         "service": ip["service"],
-                                         "type": 4}
-                                    })
+                        if check_is_ip(ip["ip_prefix"]):
+                            clouds[url].update({ip["ip_prefix"]:{
+                                            "description": "IP Address Used by AWS",
+                                            "region": ip["region"],
+                                            "service": ip["service"],
+                                            "type": 4}
+                                        })
                         
 def get_cloudflare():
     urls = {"cloudflare-v4": "https://www.cloudflare.com/ips-v4/#",
@@ -273,12 +278,13 @@ def get_linode():
                     if len(line)>4:
                         cols = line.split(",")
                         
-                        clouds[url].update({cols[0]:{
-                                            "description": "IP Address Used by Linode",
-                                            "region": ",".join(cols[2:4]),
-                                            "service": None,
-                                            "type": None}
-                                    })
+                        if check_is_ip(cols[0]):
+                            clouds[url].update({cols[0]:{
+                                                "description": "IP Address Used by Linode",
+                                                "region": ",".join(cols[2:4]),
+                                                "service": None,
+                                                "type": None}
+                                        })
                         
 def get_github():
     urls = {"github": "https://api.github.com/meta"}
@@ -298,12 +304,13 @@ def get_github():
                 for service in j.keys():
                     if "ssh_keys" not in service and "ssh_key_fingerprints" not in service and "verifiable_password_authentication" not in service and "domains" not in service:
                         for ip in j[service]:
-                            clouds[url].update({ip:{
-                                                "description": "IP Address Used by Github",
-                                                "region": None,
-                                                "service": service,
-                                                "type": None}
-                                        })   
+                            if check_is_ip(ip):
+                                clouds[url].update({ip:{
+                                                    "description": "IP Address Used by Github",
+                                                    "region": None,
+                                                    "service": service,
+                                                    "type": None}
+                                            })   
 
 def get_digital_ocean():
     urls = {"digital_ocean": "https://digitalocean.com/geo/google.csv"}
@@ -404,12 +411,13 @@ def get_azure():
                         for m in range(len(j["values"])):
                             if "properties" in j["values"][m].keys():
                                 for n in range(len(j["values"][m]["properties"]["addressPrefixes"])):
-                                        clouds[url["name"]].update({j["values"][m]["properties"]["addressPrefixes"][n]:{
-                                                "description": "IP Address Used by Azure " + url["dname"],
-                                                "region": j["values"][m]["properties"]["region"],
-                                                "service": j["values"][m]["properties"]["systemService"],
-                                                "type": None}
-                                        })
+                                        if check_is_ip(j["values"][m]["properties"]["addressPrefixes"][n]):
+                                            clouds[url["name"]].update({j["values"][m]["properties"]["addressPrefixes"][n]:{
+                                                    "description": "IP Address Used by Azure " + url["dname"],
+                                                    "region": j["values"][m]["properties"]["region"],
+                                                    "service": j["values"][m]["properties"]["systemService"],
+                                                    "type": None}
+                                            })
 
 def get_ibm():
     urls = {"ibm": "https://raw.githubusercontent.com/dprosper/cidr-calculator/main/data/datacenters.json"}
@@ -498,21 +506,23 @@ def get_zscaler():
                                             services += ",gre"
                                         else:
                                             services += "gre"
-
-                                    clouds[url].update({j["zscaler.net"][contient][city][m]["range"]:{
-                                        "description": "IP Address Used by Zscaler",
-                                        "region": ",".join([contient,city]),
-                                        "service": services,
-                                        "type": None}
-                                    })
+                                    
+                                    if check_is_ip(j["zscaler.net"][contient][city][m]["range"]):
+                                        clouds[url].update({j["zscaler.net"][contient][city][m]["range"]:{
+                                            "description": "IP Address Used by Zscaler",
+                                            "region": ",".join([contient,city]),
+                                            "service": services,
+                                            "type": None}
+                                        })
                 if "zscaler-hubs" in url and "cloudName" in j.keys() and "hubPrefixes" in j.keys():
                     for ip in j["hubPrefixes"]:
-                        clouds[url].update({ip:{
-                            "description": "IP Address Used by Zscaler",
-                            "region": None,
-                            "service": "Used by various Zscaler services (i.e. ZIA Virtual Service Edge, ZIA Private Service Edge, Zscaler Client Connector, DLP)",
-                            "type": None}
-                            })
+                        if check_is_ip(ip):
+                            clouds[url].update({ip:{
+                                "description": "IP Address Used by Zscaler",
+                                "region": None,
+                                "service": "Used by various Zscaler services (i.e. ZIA Virtual Service Edge, ZIA Private Service Edge, Zscaler Client Connector, DLP)",
+                                "type": None}
+                                })
 
 def update():
     get_gcp()
