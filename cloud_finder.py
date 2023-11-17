@@ -177,22 +177,24 @@ def get_cloudflare():
                 clouds.update({url:defaultdict()})
 
                 for ip in t.split("\n"):
-                    clouds[url].update({ip.strip():{
-                                        "description": "IP Address Used by Cloudflare",
-                                        "region": None,
-                                        "service": None,
-                                        "type": 4}
-                                })
+                    if check_is_ip(ip.strip()):
+                        clouds[url].update({ip.strip():{
+                                            "description": "IP Address Used by Cloudflare",
+                                            "region": None,
+                                            "service": None,
+                                            "type": 4}
+                                    })
             elif url == "cloudflare-v6":
                 clouds.update({url:defaultdict()})
 
                 for ip in t.split("\n"):
-                    clouds[url].update({ip.strip():{
-                                        "description": "IP Address Used by Cloudflare",
-                                        "region": None,
-                                        "service": None,
-                                        "type": 6}
-                                })
+                    if check_is_ip(ip.strip()):
+                        clouds[url].update({ip.strip():{
+                                            "description": "IP Address Used by Cloudflare",
+                                            "region": None,
+                                            "service": None,
+                                            "type": 6}
+                                    })
 
 def get_fastly():
     urls = {"fastly": "https://api.fastly.com/public-ip-list"}
@@ -210,24 +212,26 @@ def get_fastly():
                 clouds.update({url:defaultdict()})
 
                 for ip in j["addresses"]:
-                    clouds[url].update({ip:{
-                                        "description": "IP Address Used by Fastly",
-                                        "region": None,
-                                        "service": None,
-                                        "type": 4}
-                                })
+                    if check_is_ip(ip):
+                        clouds[url].update({ip:{
+                                            "description": "IP Address Used by Fastly",
+                                            "region": None,
+                                            "service": None,
+                                            "type": 4}
+                                    })
             
             if url == "fastly" and "ipv6_addresses" in j.keys():
                 if url not in clouds.keys():
                     clouds.update({url:defaultdict()})
 
                 for ip in j["ipv6_addresses"]:
-                    clouds[url].update({ip:{
-                                        "description": "IP Address Used by Fastly",
-                                        "region": None,
-                                        "service": None,
-                                        "type": 6}
-                                }) 
+                    if check_is_ip(ip):
+                        clouds[url].update({ip:{
+                                            "description": "IP Address Used by Fastly",
+                                            "region": None,
+                                            "service": None,
+                                            "type": 6}
+                                    }) 
                     
 def get_oci():
     urls = {"oci": "https://docs.oracle.com/en-us/iaas/tools/public_ip_ranges.json"}
@@ -247,12 +251,13 @@ def get_oci():
                 for n in range(len(j["regions"])):
                     if "region" in j["regions"][n].keys() and "cidrs" in j["regions"][n].keys():
                         for m in range(len(j["regions"][n]["cidrs"])):
-                            clouds[url].update({j["regions"][n]["cidrs"][m]["cidr"]:{
-                                    "description": "IP Address Used by Oracle for OCI or other services.",
-                                    "region": j["regions"][n]["region"],
-                                    "service": j["regions"][n]["cidrs"][m]["tags"],
-                                    "type": None}
-                            }) 
+                            if check_is_ip(j["regions"][n]["cidrs"][m]["cidr"]):
+                                clouds[url].update({j["regions"][n]["cidrs"][m]["cidr"]:{
+                                        "description": "IP Address Used by Oracle for OCI or other services.",
+                                        "region": j["regions"][n]["region"],
+                                        "service": j["regions"][n]["cidrs"][m]["tags"],
+                                        "type": None}
+                                }) 
                     
 def get_linode():
     urls = {"linode": "https://geoip.linode.com/"}
@@ -334,12 +339,13 @@ def get_digital_ocean():
                 cols = line.split(",")
 
                 if len(line)>4:
-                    clouds[url].update({cols[0]:{
-                            "description": "IP Address Used by DigitalOcean",
-                            "region": ",".join(cols[2:4]),
-                            "service": None,
-                            "type": None}
-                    })   
+                    if check_is_ip(cols[0]):
+                        clouds[url].update({cols[0]:{
+                                "description": "IP Address Used by DigitalOcean",
+                                "region": ",".join(cols[2:4]),
+                                "service": None,
+                                "type": None}
+                        })   
 
 def get_akamai():
     urls = {"akamai": "https://techdocs.akamai.com/property-manager/pdfs/akamai_ipv4_ipv6_CIDRs-txt.zip"}
@@ -361,12 +367,13 @@ def get_akamai():
                                 for line in zipfile.open(file).readlines():
                                     line=line.decode("utf-8").strip()
                                     if len(line)>4:
-                                        clouds[url].update({line:{
-                                                "description": "IP Address Used by Akamai",
-                                                "region": None,
-                                                "service": None,
-                                                "type": None}
-                                        })
+                                        if check_is_ip(line):
+                                            clouds[url].update({line:{
+                                                    "description": "IP Address Used by Akamai",
+                                                    "region": None,
+                                                    "service": None,
+                                                    "type": None}
+                                            })
 
 def get_azure():
     url0 = "https://azservicetags.azurewebsites.net/"
@@ -442,13 +449,14 @@ def get_ibm():
                                     for o in range(len(j["data_centers"][n][service])):
                                         if isinstance(j["data_centers"][n][service][o], dict) and "cidr_blocks" in j["data_centers"][n][service][o].keys():
                                             for ip in range(len(j["data_centers"][n][service][o]["cidr_blocks"])):
-                                                if ipaddress.ip_interface(j["data_centers"][n][service][o]["cidr_blocks"][ip]).is_global:
-                                                    clouds[url].update({j["data_centers"][n][service][o]["cidr_blocks"][ip]:{
-                                                    "description": "IP Address Used by IBM Cloud",
-                                                    "region": j["data_centers"][n]["name"],
-                                                    "service": service,
-                                                    "type": None}
-                                                })
+                                                if check_is_ip(j["data_centers"][n][service][o]["cidr_blocks"][ip]):
+                                                    if ipaddress.ip_interface(j["data_centers"][n][service][o]["cidr_blocks"][ip]).is_global:
+                                                        clouds[url].update({j["data_centers"][n][service][o]["cidr_blocks"][ip]:{
+                                                        "description": "IP Address Used by IBM Cloud",
+                                                        "region": j["data_centers"][n]["name"],
+                                                        "service": service,
+                                                        "type": None}
+                                                    })
 
 def get_o365():
     urls = {"o365": "https://endpoints.office.com/endpoints/worldwide?clientrequestid=b10c5ed1-bad1-445f-b386-b919946339a7"}
@@ -468,12 +476,13 @@ def get_o365():
                 for m in range(len(j)):
                     if "ips" in j[m].keys():
                         for n in range(len(j[m]["ips"])):
-                            clouds[url].update({j[m]["ips"][n]:{
-                                "description": "IP Address Used by Microsoft O365",
-                                "region": None,
-                                "service": ",".join([j[m]["serviceArea"], j[m]["serviceAreaDisplayName"]]),
-                                "type": None}
-                            })            
+                            if check_is_ip(j[m]["ips"][n]):
+                                clouds[url].update({j[m]["ips"][n]:{
+                                    "description": "IP Address Used by Microsoft O365",
+                                    "region": None,
+                                    "service": ",".join([j[m]["serviceArea"], j[m]["serviceAreaDisplayName"]]),
+                                    "type": None}
+                                })            
 
 def get_zscaler():
     urls = {"zscaler": "https://config.zscaler.com/api/zscaler.net/cenr/json",
