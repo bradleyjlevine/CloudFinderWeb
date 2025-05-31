@@ -1,0 +1,13 @@
+[project]
+name = "cloudfinderweb"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "requests",
+    "beautifulsoup4",
+    "flask",
+    "jinja2",
+    "gunicorn>=23.0.0",
+]
