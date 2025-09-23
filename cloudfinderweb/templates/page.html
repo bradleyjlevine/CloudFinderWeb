@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html data-bs-theme="dark">
+    <head>
+        <title>IP Lookup</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+        <link rel="manifest" href="/site.webmanifest">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <div class="container mt-5">
+            <h1 class="mb-4">Cloud Provider IP Lookup</h1>
+            <form action="{{ url_for('web.submission') }}" method="POST">
+                <div class="mb-3">
+                    <label for="ip-input" class="h4 form-label">
+                        IP Address
+                    </label>
+                    <input id="ip-input" class="form-control" type="text" name="ip" placeholder="Enter IPv4 or IPv6 address">
+                    <div id="ip-help" class="form-text">You can enter a IPv4 or IPv6 address to lookup.</div>
+                </div>
+                <div class="mb-3 form-check">
+                    <input class="form-check-input" type="checkbox" name="updatelists" value="yes" id="updatelists">
+                    <label class="form-check-label" for="updatelists">
+                      Update IP Lists (this will take a minute)
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+
+            <div id="results" class="mt-4" style="display: none;">
+                <h2>Results</h2>
+                <div id="results-content"></div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const form = document.querySelector('form');
+                const resultsDiv = document.getElementById('results');
+                const resultsContent = document.getElementById('results-content');
+
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    // Show loading indicator
+                    resultsContent.innerHTML = '<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>';
+                    resultsDiv.style.display = 'block';
+
+                    // Submit form via AJAX
+                    const formData = new FormData(form);
+
+                    fetch(form.action, {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Display results
+                        let html = '';
+
+                        if (data.error) {
+                            html = `<div class="alert alert-danger">${data.error}</div>`;
+                        } else if (Object.keys(data).length === 0) {
+                            html = '<div class="alert alert-info">No cloud provider found for this IP address.</div>';
+                        } else {
+                            html = '<div class="alert alert-success">This IP address belongs to the following cloud providers:</div>';
+                            html += '<div class="list-group">';
+
+                            for (const provider in data) {
+                                const providerInfo = data[provider];
+                                html += `
+                                    <div class="list-group-item">
+                                        <h5>${providerInfo.provider}</h5>
+                                        <ul>`;
+
+                                providerInfo.matches.forEach(match => {
+                                    html += `<li>Network: ${match.network}</li>`;
+                                    if (match.info.region) {
+                                        html += `<li>Region: ${match.info.region}</li>`;
+                                    }
+                                    if (match.info.service) {
+                                        html += `<li>Service: ${match.info.service}</li>`;
+                                    }
+                                    html += `<li>Description: ${match.info.description}</li>`;
+                                });
+
+                                html += `</ul>
+                                    </div>`;
+                            }
+
+                            html += '</div>';
+                        }
+
+                        resultsContent.innerHTML = html;
+                    })
+                    .catch(error => {
+                        resultsContent.innerHTML = '<div class="alert alert-danger">An error occurred while processing your request.</div>';
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>
