@@ -64,6 +64,9 @@ CLOUD_PROVIDER_URLS = {
 
     # Auth0
     "auth0": "https://cdn.auth0.com/ip-ranges.json",
+
+    # Salesforce
+    "salesforce": "https://ip-ranges.salesforce.com/ip-ranges.json",
 }
 
 # Flask configuration
