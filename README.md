@@ -116,17 +116,11 @@ curl -X POST http://localhost:5050/api/update
 
 ## Examples
 
-### Web Interface
+### Web Interface Demo
 
 Submit an IP address to check:
 
 ![Web Page For Submission](2025-09-24_22-47-48.png)
-
-### Response
-
-After submitting, you'll see which cloud provider(s) the IP belongs to:
-
-![Response](2023-10-26_19-50-29.png)
 
 ## Project Structure
 
