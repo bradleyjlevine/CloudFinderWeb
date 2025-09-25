@@ -5,7 +5,7 @@ A high-performance web application for checking if an IP address belongs to a cl
 ## Features
 
 - 🚀 **Fast IP Lookups** - Efficient IP range matching using optimized data structures
-- 🌐 **21+ Cloud Providers** - Comprehensive coverage of major cloud infrastructure
+- 🌐 **22+ Cloud Providers** - Comprehensive coverage of major cloud infrastructure
 - 🔄 **Auto-Update** - Fetch latest IP ranges directly from cloud provider APIs
 - 🎯 **RESTful API** - Programmatic access to IP lookup functionality
 - 💻 **Modern Web UI** - Clean, responsive interface with Bootstrap 5
@@ -18,6 +18,7 @@ A high-performance web application for checking if an IP address belongs to a cl
 * Microsoft Azure (Public, China, Government, Germany)
 * Auth0
 * Salesforce
+* Atlassian
 * Cloudflare
 * GitHub
 * DigitalOcean

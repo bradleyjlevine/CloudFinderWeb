@@ -21,6 +21,7 @@ from .digitalocean import DigitalOceanProvider
 from .ibm import IBMCloudProvider
 from .auth0 import Auth0Provider
 from .salesforce import SalesforceProvider
+from .atlassian import AtlassianProvider
 
 
 class ProviderRegistry:
@@ -138,3 +139,4 @@ provider_registry.register(DigitalOceanProvider())
 provider_registry.register(IBMCloudProvider())
 provider_registry.register(Auth0Provider())
 provider_registry.register(SalesforceProvider())
+provider_registry.register(AtlassianProvider())

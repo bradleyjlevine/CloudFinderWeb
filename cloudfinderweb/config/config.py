@@ -67,6 +67,9 @@ CLOUD_PROVIDER_URLS = {
 
     # Salesforce
     "salesforce": "https://ip-ranges.salesforce.com/ip-ranges.json",
+
+    # Atlassian
+    "atlassian": "https://ip-ranges.atlassian.com/",
 }
 
 # Flask configuration
