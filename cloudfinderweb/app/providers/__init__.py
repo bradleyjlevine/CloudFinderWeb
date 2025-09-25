@@ -19,6 +19,7 @@ from .oci import OCIProvider
 from .linode import LinodeProvider
 from .digitalocean import DigitalOceanProvider
 from .ibm import IBMCloudProvider
+from .auth0 import Auth0Provider
 
 
 class ProviderRegistry:
@@ -134,3 +135,4 @@ provider_registry.register(OCIProvider())
 provider_registry.register(LinodeProvider())
 provider_registry.register(DigitalOceanProvider())
 provider_registry.register(IBMCloudProvider())
+provider_registry.register(Auth0Provider())

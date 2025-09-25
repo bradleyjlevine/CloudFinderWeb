@@ -61,6 +61,9 @@ CLOUD_PROVIDER_URLS = {
     # Zscaler
     "zscaler": "https://config.zscaler.com/api/zscaler.net/cenr/json",
     "zscaler-hubs": "https://config.zscaler.com/api/zscaler.net/hubs/cidr/json/required",
+
+    # Auth0
+    "auth0": "https://cdn.auth0.com/ip-ranges.json",
 }
 
 # Flask configuration
