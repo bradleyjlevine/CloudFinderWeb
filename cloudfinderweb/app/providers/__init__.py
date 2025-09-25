@@ -22,6 +22,7 @@ from .ibm import IBMCloudProvider
 from .auth0 import Auth0Provider
 from .salesforce import SalesforceProvider
 from .atlassian import AtlassianProvider
+from .elastic import ElasticCloudProvider
 
 
 class ProviderRegistry:
@@ -140,3 +141,4 @@ provider_registry.register(IBMCloudProvider())
 provider_registry.register(Auth0Provider())
 provider_registry.register(SalesforceProvider())
 provider_registry.register(AtlassianProvider())
+provider_registry.register(ElasticCloudProvider())

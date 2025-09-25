@@ -70,6 +70,9 @@ CLOUD_PROVIDER_URLS = {
 
     # Atlassian
     "atlassian": "https://ip-ranges.atlassian.com/",
+
+    # Elastic Cloud
+    "elastic": "https://ips.cld.elstc.co/",
 }
 
 # Flask configuration
