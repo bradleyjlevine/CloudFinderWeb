@@ -120,7 +120,7 @@ curl -X POST http://localhost:5050/api/update
 
 Submit an IP address to check:
 
-![Web Page For Submission](2023-10-26_19-50-12.png)
+![Web Page For Submission](2025-09-24_22-47-48.png)
 
 ### Response
 
