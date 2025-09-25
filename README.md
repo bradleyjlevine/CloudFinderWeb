@@ -20,6 +20,7 @@ A high-performance web application for checking if an IP address belongs to a cl
 * Salesforce
 * Atlassian
 * Elastic Cloud
+* Zoom
 * Cloudflare
 * GitHub
 * DigitalOcean
@@ -192,6 +193,7 @@ The application provides a RESTful API with the following endpoints:
 Configuration settings are located in `cloudfinderweb/config/config.py`. You can customize:
 
 * API timeouts
+* Update lock timeouts
 * Cloud provider URLs
 * Cache directories
 * Flask settings
@@ -203,6 +205,7 @@ The application uses several optimizations:
 * **Efficient IP Lookup**: Uses pre-computed IP network objects for fast matching
 * **Async Updates**: All cloud providers update in parallel
 * **Caching**: IP ranges are cached locally to reduce API calls
+* **File Locking**: Prevents duplicate update operations when using multiple workers
 * **Modular Architecture**: Clean separation of concerns for maintainability
 
 ## Known Limitations

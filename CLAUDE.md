@@ -69,6 +69,8 @@ The codebase uses a modern Flask application factory pattern with:
 
 **Async Updates**: All providers can update concurrently using `asyncio.create_task()` in the provider registry.
 
+**File Locking**: The provider registry uses file-based locking (via the `filelock` library) to prevent multiple workers from updating simultaneously when running with Gunicorn.
+
 ### Data Flow
 
 1. **Startup**: Providers load cached data from `cloudfinderweb/clouds/*.json`
@@ -128,4 +130,5 @@ Key settings in `cloudfinderweb/config/config.py`:
 - `CLOUD_PROVIDER_URLS`: API endpoints for all providers
 - `CLOUDS_DIR`: Cache directory location
 - `API_TIMEOUT`: HTTP request timeout (default 60s)
+- `UPDATE_LOCK_TIMEOUT`: Timeout for file lock acquisition (default 600s)
 - Flask environment configs (dev/prod)

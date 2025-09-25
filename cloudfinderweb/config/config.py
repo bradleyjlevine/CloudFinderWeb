@@ -13,6 +13,9 @@ CLOUDS_DIR = os.path.join(BASE_DIR, "clouds")
 # Default API timeout in seconds
 API_TIMEOUT = 60
 
+# Timeout for file lock acquisition in seconds (10 minutes)
+UPDATE_LOCK_TIMEOUT = 600
+
 # Default HTTP headers for requests
 DEFAULT_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 Edg/119.0.0.0"
