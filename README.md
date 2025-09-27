@@ -10,6 +10,8 @@ A high-performance web application for checking if an IP address belongs to a cl
 - 🎯 **RESTful API** - Programmatic access to IP lookup functionality
 - 💻 **Modern Web UI** - Clean, responsive interface with Bootstrap 5
 - ⚡ **Async Processing** - Parallel updates for all cloud providers
+- 🐳 **Docker Support** - Easy deployment with Docker and Docker Compose
+- 🧠 **MCP Server** - FastMCP integration for AI assistant compatibility
 
 ## Supported Cloud Providers
 
@@ -88,6 +90,18 @@ Access the application at http://localhost:5050
 gunicorn -b 127.0.0.1:5050 -w 4 "cloudfinderweb:create_app()"
 ```
 
+#### Docker Deployment
+```bash
+# Build and start services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+```
+
 ### Using the Web Interface
 
 1. Navigate to http://localhost:5050
@@ -114,6 +128,26 @@ curl http://localhost:5050/api/providers
 curl -X POST http://localhost:5050/api/update
 ```
 
+#### Get a random IP from cloud providers
+```bash
+curl -X GET http://localhost:5050/api/random-ip
+```
+
+### Using the MCP Server
+
+The MCP Server runs on port 5051 and provides an interface compatible with AI assistants using the FastMCP protocol.
+
+```bash
+# Start the MCP server
+python cloudfinder_mcp.py
+```
+
+Available tools via MCP:
+- `is_cloud_ip`: Simple check if an IP belongs to a cloud provider
+- `get_cloud_ip_details`: Detailed information about an IP address
+- `get_random_cloud_ip`: Get a random IP from cloud provider ranges
+- `update_cloud_ips`: Update the cached cloud provider IP data
+
 ## Examples
 
 ### Web Interface Demo
@@ -138,6 +172,9 @@ CloudFinderWeb/
 │   ├── templates/           # HTML templates
 │   └── clouds/              # Cached cloud provider IP data
 ├── tests/                   # Test suite
+├── cloudfinder_mcp.py       # MCP server for AI assistant integration
+├── Dockerfile               # Docker container definition
+├── docker-compose.yml       # Multi-container Docker setup
 ├── pyproject.toml           # Python project configuration
 ├── README.md                # This file
 └── LICENSE                  # License information
@@ -201,6 +238,8 @@ The application uses several optimizations:
 * **Caching**: IP ranges are cached locally to reduce API calls
 * **File Locking**: Prevents duplicate update operations when using multiple workers
 * **Modular Architecture**: Clean separation of concerns for maintainability
+* **Docker Support**: Easy deployment in containerized environments
+* **MCP Integration**: Compatible with AI assistants via FastMCP protocol
 
 ## Known Limitations
 

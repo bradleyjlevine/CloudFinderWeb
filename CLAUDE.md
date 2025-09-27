@@ -15,6 +15,19 @@ source .venv/bin/activate
 uv pip install -e .
 ```
 
+### Docker Setup (Alternative)
+
+```bash
+# Build and start all services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+```
+
 ## Running the Application
 
 ```bash
@@ -26,6 +39,9 @@ python run.py
 
 # Production with Gunicorn (Unix/WSL2 only)
 gunicorn -b 127.0.0.1:5050 -w 4 "cloudfinderweb:create_app()"
+
+# Start the MCP server (for AI assistant integration)
+python cloudfinder_mcp.py
 ```
 
 Application available at http://localhost:5050
@@ -55,6 +71,12 @@ The codebase uses a modern Flask application factory pattern with:
 
 ### Key Components
 
+**MCP Server**: The `cloudfinder_mcp.py` script provides AI assistant integration:
+- Uses FastMCP protocol to expose cloud finder functionality to AI assistants
+- Provides tools for checking IPs, getting IP details, selecting random IPs, and updating providers
+- Runs on port 5051 by default while the main app runs on port 5050
+- Uses the same provider registry as the main application
+
 **Provider System**: Each cloud provider inherits from `CloudProvider` base class in `providers/base.py`. The base class provides:
 - Async HTTP client with proper session management
 - IP validation that handles both individual IPs and CIDR notation
@@ -70,6 +92,12 @@ The codebase uses a modern Flask application factory pattern with:
 **Async Updates**: All providers can update concurrently using `asyncio.create_task()` in the provider registry.
 
 **File Locking**: The provider registry uses file-based locking (via the `filelock` library) to prevent multiple workers from updating simultaneously when running with Gunicorn.
+
+**Docker Support**: The application can be run in Docker containers:
+- `Dockerfile`: Defines the container image using Python 3.12
+- `docker-compose.yml`: Sets up both the main web application and MCP server
+- Configures health checks, port mappings, and volume mounts
+- Allows easy scaling with multiple web workers
 
 ### Data Flow
 
@@ -132,3 +160,18 @@ Key settings in `cloudfinderweb/config/config.py`:
 - `API_TIMEOUT`: HTTP request timeout (default 60s)
 - `UPDATE_LOCK_TIMEOUT`: Timeout for file lock acquisition (default 600s)
 - Flask environment configs (dev/prod)
+
+## Docker Container Structure
+
+The application is containerized with the following components:
+
+- **cloudfinderweb**: The main web application container
+  - Runs using Gunicorn with 4 workers
+  - Exposes port 5050
+  - Includes health checks via the /api/providers endpoint
+
+- **cloudfinder-mcp**: The MCP server for AI assistant integration
+  - Runs the cloudfinder_mcp.py script
+  - Exposes port 5051
+  - Depends on the main web application
+  - Shares the same codebase and cached data
