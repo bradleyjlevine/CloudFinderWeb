@@ -1,0 +1,27 @@
+services:
+  cloudfinderweb:
+    build: .
+    command: uv run gunicorn -b 0.0.0.0:5050 -w 4 "cloudfinderweb:create_app()"
+    volumes:
+      - ./cloudfinderweb:/app/cloudfinderweb
+    ports:
+      - "5050:5050"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5050/api/providers"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  cloudfinder-mcp:
+    build: .
+    command: uv run python cloudfinder_mcp.py
+    volumes:
+      - ./cloudfinderweb:/app/cloudfinderweb
+    ports:
+      - "5051:5051"
+    restart: unless-stopped
+    depends_on:
+      cloudfinderweb:
+        condition: service_healthy
