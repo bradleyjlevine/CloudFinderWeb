@@ -34,8 +34,7 @@ class CloudIPDetails(BaseModel):
 
 class RandomIPResult(BaseModel):
     ip: str = Field(..., description="A randomly selected cloud IP address")
-    provider: str = Field(..., description="The name of the cloud provider this IP belongs to")
-    details: Dict[str, Any] = Field(..., description="Details about the IP range")
+    providers: Dict[str, Any] = Field(..., description="All cloud providers this IP belongs to (same format as get_cloud_ip_details)")
 
 class UpdateResult(BaseModel):
     success: bool = Field(..., description="Whether the update was successful")
@@ -116,16 +115,12 @@ def get_cloud_ip_details(ip: str) -> CloudIPDetails:
                 "type": "string",
                 "description": "A randomly selected cloud IP address"
             },
-            "provider": {
-                "type": "string",
-                "description": "The name of the cloud provider this IP belongs to"
-            },
-            "details": {
+            "providers": {
                 "type": "object",
-                "description": "Details about the IP range including network, description, region, service, and type"
+                "description": "All cloud providers this IP belongs to, with provider IDs as keys and provider details as values (same format as get_cloud_ip_details)"
             }
         },
-        "required": ["ip", "provider", "details"]
+        "required": ["ip", "providers"]
     }
 )
 def get_random_cloud_ip(provider: Optional[str] = None) -> RandomIPResult:
@@ -161,19 +156,13 @@ def get_random_cloud_ip(provider: Optional[str] = None) -> RandomIPResult:
         # Get the network address (first IP in range)
         ip = str(selected_range.network_address)
 
-        # Get range info
-        range_info = selected_provider.ip_ranges.ranges[selected_range].to_dict()
+        # Perform a full lookup to get all providers that contain this IP
+        # This ensures we return ALL providers that match this IP, not just the one we randomly selected from
+        all_matches = provider_registry.lookup_ip(ip)
 
         return RandomIPResult(
             ip=ip,
-            provider=selected_provider.display_name,
-            details={
-                'network': str(selected_range),
-                'description': range_info.get('description', ''),
-                'region': range_info.get('region'),
-                'service': range_info.get('service'),
-                'type': range_info.get('type')
-            }
+            providers=all_matches
         )
     except Exception as e:
         logger.error(f"Error getting random IP: {str(e)}")
