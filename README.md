@@ -1,11 +1,11 @@
 # CloudFinderWeb
 
-A high-performance web application for checking if an IP address belongs to a cloud service provider, with support for 19+ major cloud providers.
+A high-performance web application for checking if an IP address belongs to a cloud service provider, with support for 20+ major cloud providers.
 
 ## Features
 
 - 🚀 **Fast IP Lookups** - Efficient IP range matching using optimized data structures
-- 🌐 **23+ Cloud Providers** - Comprehensive coverage of major cloud infrastructure
+- 🌐 **24+ Cloud Providers** - Comprehensive coverage of major cloud infrastructure
 - 🔄 **Auto-Update** - Fetch latest IP ranges directly from cloud provider APIs
 - 🎯 **RESTful API** - Programmatic access to IP lookup functionality
 - 💻 **Modern Web UI** - Clean, responsive interface with Bootstrap 5
@@ -33,6 +33,7 @@ A high-performance web application for checking if an IP address belongs to a cl
 * Linode
 * Fastly
 * Zscaler
+* Vultr
 
 ## Installation
 

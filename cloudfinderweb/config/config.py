@@ -76,6 +76,9 @@ CLOUD_PROVIDER_URLS = {
 
     # Elastic Cloud
     "elastic": "https://ips.cld.elstc.co/",
+
+    # Vultr
+    "vultr": "https://geofeed.constant.com/?json",
 }
 
 # Flask configuration
