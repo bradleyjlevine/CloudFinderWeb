@@ -29,6 +29,7 @@ from .atlassian import AtlassianProvider
 from .elastic import ElasticCloudProvider
 from .zoom import ZoomProvider
 from .vultr import VultrProvider
+from .okta import OktaProvider
 
 
 class ProviderRegistry:
@@ -180,3 +181,4 @@ provider_registry.register(AtlassianProvider())
 provider_registry.register(ElasticCloudProvider())
 provider_registry.register(ZoomProvider())
 provider_registry.register(VultrProvider())
+provider_registry.register(OktaProvider())

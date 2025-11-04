@@ -79,6 +79,9 @@ CLOUD_PROVIDER_URLS = {
 
     # Vultr
     "vultr": "https://geofeed.constant.com/?json",
+
+    # Okta
+    "okta": "https://s3.amazonaws.com/okta-ip-ranges/ip_ranges.json",
 }
 
 # Flask configuration
