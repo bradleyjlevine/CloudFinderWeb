@@ -12,8 +12,7 @@ RUN apt-get update && \
 COPY . .
 
 # Install the application using uv sync
-RUN uv sync && \
-    uv add gunicorn fastmcp
+RUN uv sync --frozen
 
 EXPOSE 5050 5051
 
