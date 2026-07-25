@@ -53,7 +53,8 @@ class UpdateResult(BaseModel):
             }
         },
         "required": ["is_cloud_ip"]
-    }
+    },
+    annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False}
 )
 def is_cloud_ip(ip: str) -> CloudIPResult:
     """
@@ -87,7 +88,8 @@ def is_cloud_ip(ip: str) -> CloudIPResult:
             }
         },
         "required": ["ip", "found", "providers"]
-    }
+    },
+    annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False}
 )
 def get_cloud_ip_details(ip: str) -> CloudIPDetails:
     """
@@ -121,7 +123,8 @@ def get_cloud_ip_details(ip: str) -> CloudIPDetails:
             }
         },
         "required": ["ip", "providers"]
-    }
+    },
+    annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": False, "openWorldHint": False}
 )
 def get_random_cloud_ip(provider: Optional[str] = None) -> RandomIPResult:
     """
@@ -184,7 +187,8 @@ def get_random_cloud_ip(provider: Optional[str] = None) -> RandomIPResult:
             }
         },
         "required": ["success", "results"]
-    }
+    },
+    annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": True, "openWorldHint": True}
 )
 async def update_cloud_ips(provider: Optional[str] = None) -> UpdateResult:
     """
